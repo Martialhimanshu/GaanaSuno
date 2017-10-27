@@ -1,0 +1,116 @@
+{% extends 'gaana/base.html' %}
+{% block title %}{{ album }}{% endblock %}
+{% block albums_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+
+    <div class="row">
+
+        <!-- Left Album Info -->
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="{% url 'gaana:detail' album.id %}">
+                        {% if album.album_logo.url %}
+                            <img src="{{ album.album_logo.url }}" class="img-responsive">
+                        {% else %}
+                            <h3>No image</h3>
+                        {% endif %}
+                    </a>
+                    <h1>{{ album.album_title }} <small>{{ album.genre }}</small></h1>
+                    <h2>{{ album.artist }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Song Info -->
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+{#                <li role="presentation" class="active"><a href="{% url 'gaana:detail' album.id %}">View All</a></li>#}
+                <li role="presentation"><a href="{% url 'gaana:create_song' album.id %}">Add New Song</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h3>All Songs</h3>
+
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Song File</th>
+                            <th>Favorite</th>
+                            <th>Actions</th>
+                            <th>Share</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for song in album.song_set.all %}
+                            <tr>
+                                <td>{{ song.song_title }}</td>
+                                <td>
+                                    
+                                    <a target="-_top" href="{{ song.song_file.url }}">
+                                        <button type="button" class="btn btn-success btn-xs">
+                                            <span class="glyphicon glyphicon-play"></span>&nbsp; Play
+                                        </button>
+                                    </a>
+
+                                </td>
+                                <td>
+                                    <a href="{% url 'gaana:favorite' song.id %}"><span class="glyphicon glyphicon-heart {% if song.is_favorite %}active{% endif %}"></span></a>
+                                </td>
+                                <td>
+                                    <form action="{% url 'gaana:delete_song' album.id song.id %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="song_id" value="{{ song.id }}" />
+                                        <button type="submit" class="btn btn-danger btn-xs">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
+                                        </button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href="#" class="glyphicon glyphicon-share"></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+        <!--Bottom comment Info-->
+
+                <div class="panel-body">
+                    <p class="lead">Leave your Comments</p>
+                     <hr>
+                        <form action="" method="POST" class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="col-md-8">
+                                <textarea class="form-control" id="textarea" name="textarea">{{ comment_form }}</textarea>
+                            </div>
+                            <input type="submit" value="Post" class="btn btn-default">
+                        </form>
+                        <hr/>
+                        <p>{{ comments.count }} Comments</p>
+                        {% for comment in comments %}
+                                <p>{{ comment.content }}</p>
+                                <footer>by {{ comment.userdetail }} | {{ comment.created_date }} ago</footer>
+                        {% endfor %}
+                </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

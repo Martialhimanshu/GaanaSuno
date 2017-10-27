@@ -1,0 +1,60 @@
+{% extends 'gaana/base.html' %}
+{% block title %}All Songs{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+    <div class="row">
+        <ul class="nav nav-pills" style="margin-bottom: 10px;">
+            <li role="presentation" {% if filter_by == 'all' %}class="active"{% endif %}><a href="{% url 'gaana:songs' 'all' %}">View all</a> </li>
+            <li role="presentation" {% if filter_by == 'favorite' %}class="active"{% endif %}><a href="{% url 'gaana:songs' 'favorite' %}">Favorite</a></li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="table">
+                        <thread>
+                            <tr>
+                                <th>Title</th>
+                                <th>Artist</th>
+                                <th>Audio</th>
+                                <th>Album</th>
+                                <th>Favorite</th>
+                            </tr>
+                        </thread>
+                        <tbody>
+                            {% for song in song_list %}
+                                <tr>
+                                    <td>{{ song.song_title }}</td>
+                                    <td>{{ song.album.artist }}</td>
+                                    <td>
+                                        <a target="_blank" href="{{ song.song_file.url }}">
+                                            <button type="button" class="btn btn-success btn-xs">
+                                                <span class="glyphicon glyphicon-play"></span>&nbsp;
+                                            </button>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'gaana:detail' song.album.id %}">
+                                            <img src="{{ song.album.album_logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;"/>
+                                        </a>
+                                        <a href="{% url 'gaana:detail' song.album.id %}">{{ song.album.album_title }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'gaana:favorite' song.id %}" class="btn-favorite"><span class="glyphicon glyphicon-heart-empty {% if song.is_favorite %}active{% endif %}"></span></a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

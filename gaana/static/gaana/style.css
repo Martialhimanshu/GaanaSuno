@@ -1,0 +1,18 @@
+body
+{
+    background-color: #f7f7f7;
+}
+.navbar{
+    border-radius: 0;
+}
+.navbar-brand{
+    font-family: 'Audiowide',cursive,Sans-Serif;
+}
+.glyphicon-heart-empty {
+    color: #CCCCCC;
+    font-size: 16px;
+}
+
+.glyphicon-heart-empty.active {
+    color: #fd363d;
+}

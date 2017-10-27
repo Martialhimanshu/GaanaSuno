@@ -1,0 +1,127 @@
+{% extends 'gaana/base.html' %}
+
+{% block body %}
+<div class="albums-container container-fluid">
+
+    <!-- Albums -->
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>{{ user.username }}'s Albums</h3>
+        </div>
+{#    {% if albums %}#}
+{#        {% if object %}#}
+    {% if albums %}
+        {# It can be anything by using context_object_name='your wished_name' in views #}
+
+    <ul class="col-sm-4 col-md-12">
+{#            {% for album in albums %}#}
+{#            {% for album in object_list %}#}
+        {% for album in albums %}
+        <div class="col-sm-4 col-md-3">
+            <div class="thumbnail">
+                <!--Album logo-->
+                <a href="{% url 'gaana:detail' album.id %}">
+                    <div id="thumb">
+                        <img src="{{ album.album_logo.url }}" class="img-responsive">
+                    </div>
+                </a>
+
+                <div class="caption">
+                    <h4>{{ album.album_title }}</h4>
+                    <h6>{{ album.artist }}</h6>
+
+                    <!--Details-->
+                    <a href="{% url 'gaana:detail' album.id %}"></a>
+
+                    <!--delete-->
+                    <form action="{% url 'gaana:album-delete' album.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="album_id" value="{{ album.id }}"/>
+                        <button type="submit" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </form>
+
+                    <!--favorite-->
+                    <a href="#" class="btn btn-default btn-sm btn-favorite">
+                        <span class="glyphicon glyphicon-heart-empty {% if album.is_favorite %}active{% endif %}"></span>
+                    </a>
+
+                    <!--Update-->
+                    <form action="{% url 'gaana:album-update' album.id %}" method="get" style="display: inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="album_id" value="{{ album.id }}"/>
+                        <button type="submit" class="btn btn-default btn-sm" value="Update">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="col-sm-12">
+    <br>
+    <a href="{% url 'gaana:album-add' %}">
+        <button class="btn btn-success">
+            <span class="glyphicon glyphicon-plus"></span>&nbsp;Add an album
+        </button>
+    </a>
+    </div>
+{% endif %}
+    </div>
+
+ <!-- If user searches and there are songs -->
+    {% if songs %}
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Songs</h3>
+            </div>
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Song Title</th>
+                                    <th>Artist</th>
+                                    <th>Audio File</th>
+                                    <th>Album</th>
+                                    <th>Favorite</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for song in songs %}
+                                    <tr>
+                                        <td>{{ song.song_title }}</td>
+                                        <td>{{ song.album.artist }}</td>
+                                        <td>
+                                            <a target="_blank" href="{{ song.audio_file.url }}">
+                                                <button type="button" class="btn btn-success btn-xs">
+                                                    <span class="glyphicon glyphicon-play"></span>&nbsp; Play
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'gaana:detail' song.album.id %}">
+                                                <img src="{{ song.album.album_logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
+                                            </a>
+                                            <a href="{% url 'gaana:detail' song.album.id %}">{{ song.album.album_title }}</a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'gaana:favorite' song.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if song.is_favorite %}active{% endif %}"></span></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
