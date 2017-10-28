@@ -18,7 +18,7 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-success navbar-inverse">
     <div class="container-fluid">
        <!--Header-->
         <div class="navbar-header">
@@ -33,7 +33,7 @@
         <div class="collapse navbar-collapse" id="topNavBar">
 
             <ul class="nav navbar-nav">
-                <li class="active">
+                <li>
                     <a href="{% url 'gaana:index' %}">
                         <span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp; Albums
 
@@ -50,8 +50,8 @@
             </ul>
             <form class="navbar-form navbar-left" roles="search" method="post" action="">
                 <div class="form-group">
-                    <input type="text" class="form-control col-md-9" name="q" value="{{ songs }}" placeholder="Search.....">
-                    <button type="submit" class="btn btn-success">
+                    <input type="text" class="form-control col-lg-9" name="q" value="{{ songs }}" placeholder="Search.....">
+                    <button type="submit" class="btn btn-secondry">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
                 </div>

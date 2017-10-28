@@ -28,7 +28,8 @@ urlpatterns = [
 
     url(r'^(?P<song_id>[0-9]+)/favorite/$', views.favorite, name='favorite'),
 
-    #url(r'^(?P<filter_by>[a-zA_Z]+)/songs/$',views.songs(),name='songs')
+    #url(r'^(?P<filter_by>[a-zA_Z]+)/songs/$',views.songs(),name='songs'),
+    url(r'^(P<album_id>[0-9]+)/comment/$',views.add_comment,name='add_comment')
 
 
 ]

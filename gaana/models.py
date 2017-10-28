@@ -30,10 +30,10 @@ class Song(models.Model):
 
 class Comment(models.Model):
     album = models.ForeignKey(Album,on_delete=models.CASCADE)
-    obj_id = models.IntegerField(max_length=5)
-    userdetail = models.CharField(max_length=200)
+    #obj_id = models.IntegerField()
+    #userdetail = models.ForeignKey(User)
     content = models.TextField()
-    created_date = models.DateTimeField(default=datetime.now)
+    #created_date = models.DateTimeField(default=datetime.now)
     #approved_comment = models.BooleanField(default=False)
 
     def approve(self):
@@ -42,6 +42,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+
+    def get_absolute_url(self):
+        return reverse('gaana:detail', kwargs={'pk': self.pk})
 
 
 #class UserForm(models.User)

@@ -8,6 +8,7 @@ from django.views.generic import View
 from .form import UserForm,SongForm,AlbumForm,CommentForm
 from django.http import JsonResponse
 from django.db.models import Q
+#from django.contrib.comments
 
 class IndexView(generic.ListView):
     template_name = 'gaana/index.html'
@@ -144,25 +145,19 @@ def songs(request,filter_by):
             user_songs = []
             return render(request,'gaana:songs',{'song_list':user_songs,'filter_by':filter_by})
 
-def add_comment(request,slug=None):
-    album = get_object_or_404(Album,slug=slug)
-    initial_data = {
-        "object_id":album.id
-    }
-    comment_form = CommentForm(request.POST or None,initial=initial_data)
-    if comment_form.is_valid():
-        obj_id = comment_form.cleaned_data.get('object_id')
-        content_data = comment_form.cleaned_data.get("content")
-        new_comment, created = Comment.objects.get_or_create(
-            album = request.album,
-            object_id = obj_id,
-            content = content_data
-        )
+def add_comment(request,album_id):
+    album = get_object_or_404(Album,pk=album_id)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        content = form.cleaned_data.get('content')
+        comment_obj = Comment(album=album,content=content)
+        comment_obj.save()
 
-    comments = album.comment_set.all()
-    context = {"comments":comments,
-               "comment_form":comment_form}
-    return render(request,'gaana/detail.html',context)
+        comments = album.comment_set.all()
+        context = {"comments":comments,
+               "comment_form":form}
+        return render(request,'gaana/detail.html',context)
+    return render(request,'gaana/detail.html')
 
 
 

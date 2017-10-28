@@ -83,6 +83,28 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                <div class="panel panel-body">
+                    <p class="lead">Leave your Comments</p>
+                     <hr>
+                <div class="panel-body">
+                    <form action="{% url 'gaana:add_comment' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input class="form-control" type="textarea">{{ comment_form }}</input>
+                                <input type="submit" value="Post" class="btn btn-default">
+                            </div>
+                        </form>
+                    <hr>
+                        <p>{{ comments.count }} Comments</p>
+                        {% for comment in comments %}
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <p>{{ comment.content }}</p>
+                                        <footer>by {{ comment.userdetail }} | {{ comment.created_date }} ago</footer>
+                                    </li>
+                                </ul>
+                        {% endfor %}
+                </div>
 
                 </div>
             </div>
@@ -90,22 +112,8 @@
         </div>
         <!--Bottom comment Info-->
 
-                <div class="panel-body">
-                    <p class="lead">Leave your Comments</p>
-                     <hr>
-                        <form action="" method="POST" class="form-horizontal">
-                            {% csrf_token %}
-                            <div class="col-md-8">
-                                <textarea class="form-control" id="textarea" name="textarea">{{ comment_form }}</textarea>
-                            </div>
-                            <input type="submit" value="Post" class="btn btn-default">
-                        </form>
-                        <hr/>
-                        <p>{{ comments.count }} Comments</p>
-                        {% for comment in comments %}
-                                <p>{{ comment.content }}</p>
-                                <footer>by {{ comment.userdetail }} | {{ comment.created_date }} ago</footer>
-                        {% endfor %}
+
+
                 </div>
 
 
