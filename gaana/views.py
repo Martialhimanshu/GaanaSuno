@@ -8,7 +8,7 @@ from django.views.generic import View
 from .form import UserForm,SongForm,AlbumForm,CommentForm
 from django.http import JsonResponse
 from django.db.models import Q
-#from django.contrib.comments
+
 
 class IndexView(generic.ListView):
     template_name = 'gaana/index.html'
@@ -20,6 +20,24 @@ class IndexView(generic.ListView):
 class DetailView(generic.DetailView):
     model = Album
     template_name = 'gaana/detail.html'
+
+    def post(self,request,pk):
+        print(pk)
+        #album = self.model
+        album = Album.objects.get(pk=pk)
+        form = CommentForm(request.POST or None)
+        if form.is_valid():
+            commentline = form.save(commit=False)
+            commentline.album = album
+            commentline.content = request.POST['content']
+            commentline.save()
+            comments = album.comment_set.all()
+            context = {"comments": comments,
+                       "comment_form": form}
+            return redirect('gaana:detail', context)
+        return render(request, self.template_name)
+
+
 
 class AlbumCreate(CreateView):
     model = Album
@@ -145,19 +163,23 @@ def songs(request,filter_by):
             user_songs = []
             return render(request,'gaana:songs',{'song_list':user_songs,'filter_by':filter_by})
 
-def add_comment(request,album_id):
-    album = get_object_or_404(Album,pk=album_id)
-    form = CommentForm(request.POST)
-    if form.is_valid():
-        content = form.cleaned_data.get('content')
-        comment_obj = Comment(album=album,content=content)
-        comment_obj.save()
-
-        comments = album.comment_set.all()
-        context = {"comments":comments,
-               "comment_form":form}
-        return render(request,'gaana/detail.html',context)
-    return render(request,'gaana/detail.html')
+# def add_comment(request,album_id):
+#     album = get_object_or_404(Album, pk=album_id)
+#     form = CommentForm(request.POST or None)
+#     if form.is_valid():
+#         comment = form.save(commit=False)
+#         comment.album = album
+#         comment.content = request.POST['content']
+#         comment.save()
+#         # content = form.cleaned_data.get('content')
+#         # comment_obj = Comment(album=album,content=content)
+#         # comment_obj.save()
+#
+#         comments = album.comment_set.all()
+#         context = {"comments":comments,
+#                "comment_form":form}
+#         return redirect(request,'gaana:detail',context)
+#     return render(request,'gaana/detail.html')
 
 
 
