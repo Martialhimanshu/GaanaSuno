@@ -14,4 +14,4 @@ Once songs are added to an album you are then able to play, favorite, delete the
 
 After an album is created you will then be able to add/upload songs. Currently supported file types are WAV, MP3, and OGG.
 
-![](http://i.imgur.com/gTNrnV6.png)
+![](https://raw.githubusercontent.com/Martialhimanshu/GaanaSuno/master/media/add_songs.jpg)
