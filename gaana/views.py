@@ -8,8 +8,9 @@ from django.views.generic import View
 from .form import UserForm,SongForm,AlbumForm,CommentForm
 from django.http import JsonResponse
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 class IndexView(generic.ListView):
     template_name = 'gaana/index.html'
     context_object_name = 'albums'
@@ -17,6 +18,7 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Album.objects.all()
 
+@login_required    
 class DetailView(generic.DetailView):
     model = Album
     template_name = 'gaana/detail.html'
@@ -38,15 +40,17 @@ class DetailView(generic.DetailView):
         return render(request, self.template_name)
 
 
-
+@login_required
 class AlbumCreate(CreateView):
     model = Album
     fields = ['artist','album_title','genre','album_logo']
 
+@login_required    
 class AlbumUpdate(UpdateView):
     model = Album
     fields = ['artist', 'album_title', 'genre', 'album_logo']
 
+@login_required    
 class AlbumDelete(DeleteView):
     model = Album
     success_url = reverse_lazy('gaana:index')
@@ -55,6 +59,7 @@ class AlbumDelete(DeleteView):
 #     model = Song
 #     fields =['song_title','song_file']
 
+@login_required
 class UserFormView(View):
     form_class = UserForm
     template_name = 'gaana/registration_form.html'
@@ -88,6 +93,7 @@ class UserFormView(View):
 Audio_file_type=['mp3','wav','ogg']
 Image_file_type = ['jpg','png','jpeg']
 
+@login_required
 def CreateSong(request,album_id):
     form = SongForm(request.POST or None, request.FILES or None)
     album = get_object_or_404(Album, pk=album_id)
@@ -111,16 +117,19 @@ def CreateSong(request,album_id):
     context={'album':album,'form':form}
     return render(request,'gaana/create_song.html',context)
 
+@login_required
 class SongDelete(DeleteView):
     model = Song
     success_url = reverse_lazy('gaana/detail.html')
 
+@login_required    
 def delete_song(request, album_id, song_id):
     album = get_object_or_404(Album, pk=album_id)
     song = Song.objects.get(pk=song_id)
     song.delete()
     return render(request, 'gaana/detail.html', {'album': album})
 
+@login_required
 def favorite(request, song_id):
     song = get_object_or_404(Song, pk=song_id)
     try:
@@ -134,6 +143,7 @@ def favorite(request, song_id):
     else:
         return JsonResponse({'success': True})
 
+@login_required    
 def favorite_album(request, album_id):
     album = get_object_or_404(Album, pk=album_id)
     try:
@@ -147,6 +157,7 @@ def favorite_album(request, album_id):
     else:
         return JsonResponse({'success': True})
 
+@login_required    
 def songs(request,filter_by):
     if not request.user.is_autenticate():
         return render(request,'gaana/login.html')
