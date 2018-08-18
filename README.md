@@ -11,7 +11,7 @@ GaanaSuno is an application that lets users upload, store and play all of your m
 5. Ajax
 6. Javascript
 7. Django
-8. Server:
+8. Server: Nginx
 9. AWS
 10. git
 
