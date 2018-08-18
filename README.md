@@ -3,6 +3,17 @@
 #version: V1.0
 
 GaanaSuno is an application that lets users upload, store and play all of your music from the cloud.  Additionally, a user can comment and share their favorite song with family &friends.
+## Technologies used
+1. Python programming
+2. MySql(ORM)
+3. HTML
+4. Bootstrap
+5. Ajax
+6. Javascript
+7. Django
+8. Server:
+9. AWS
+10. git
 
 ## Mysong page
 
